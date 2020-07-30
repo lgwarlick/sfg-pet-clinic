@@ -1,10 +1,7 @@
 package lgwarlick.sfgpetclinic.bootstrap;
 
 import lgwarlick.sfgpetclinic.model.*;
-import lgwarlick.sfgpetclinic.services.OwnerService;
-import lgwarlick.sfgpetclinic.services.PetTypeService;
-import lgwarlick.sfgpetclinic.services.SpecialtyService;
-import lgwarlick.sfgpetclinic.services.VetService;
+import lgwarlick.sfgpetclinic.services.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +14,14 @@ public class DataLoader implements CommandLineRunner {
     private final VetService vetService;
     private final PetTypeService petTypeService;
     private final SpecialtyService specialtyService;
+    private final VisitService visitService;
 
-    public DataLoader(OwnerService ownerservice, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService) {
+    public DataLoader(OwnerService ownerservice, VetService vetService, PetTypeService petTypeService, SpecialtyService specialtyService, VisitService visitService) {
         this.ownerservice = ownerservice;
         this.vetService = vetService;
         this.petTypeService = petTypeService;
         this.specialtyService = specialtyService;
+        this.visitService = visitService;
     }
 
     @Override
@@ -67,16 +66,25 @@ public class DataLoader implements CommandLineRunner {
         owner2.setCity("Miami");
         owner2.setTelephone("321-654-0987");
 
-        Pet fionasPet = new Pet();
-        fionasPet.setPetType(saveCatPetType);
-        fionasPet.setOwner(owner2);
-        fionasPet.setBirthDate(LocalDate.now());
-        fionasPet.setName("Just Cat");
-        owner2.getPets().add(fionasPet);
+        Pet fionasCat = new Pet();
+        fionasCat.setPetType(saveCatPetType);
+        fionasCat.setOwner(owner2);
+        fionasCat.setBirthDate(LocalDate.now());
+        fionasCat.setName("Just Cat");
+        owner2.getPets().add(fionasCat);
 
         ownerservice.save(owner2);
 
         System.out.println("Loaded Owners");
+
+        Visit catVisit = new Visit();
+        catVisit.setPet(fionasCat);
+        catVisit.setDate(LocalDate.now());
+        catVisit.setDescription("Cat Sneezes");
+
+        visitService.save(catVisit);
+
+        System.out.println("Loaded Visit");
 
         Specialty radiology = new Specialty();
         radiology.setDescription("Radiology");
