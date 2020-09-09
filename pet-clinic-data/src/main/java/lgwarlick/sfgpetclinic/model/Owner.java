@@ -25,6 +25,7 @@ public class Owner extends Person{
         this.pets = pets;
     }
 
+
     @Column(name = "address")
     private String address;
 
