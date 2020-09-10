@@ -22,7 +22,9 @@ public class Owner extends Person{
         super(id, firstName, lastName); //pulling data from BaseEntity and Person
         this.address = address;
         this.telephone = telephone;
-        this.pets = pets;
+        if (pets != null) {
+            this.pets = pets;
+        }
     }
 
 
@@ -37,5 +39,23 @@ public class Owner extends Person{
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner") //if owner is deleted, all pets are deleted
     private Set<Pet> pets = new HashSet<>();
+
+    public Pet getPet(String name) {
+        return getPet(name, false);
+    }
+
+    public Pet getPet(String name, boolean ignoreNew) {
+        name = name.toLowerCase();
+        for (Pet pet : pets) {
+            if (!ignoreNew || !pet.isNew()) {
+                String compName = pet.getName();
+                compName = compName.toLowerCase();
+                if (compName.equals(name)) {
+                    return pet;
+                }
+            }
+        }
+        return null;
+    }
 
 }
