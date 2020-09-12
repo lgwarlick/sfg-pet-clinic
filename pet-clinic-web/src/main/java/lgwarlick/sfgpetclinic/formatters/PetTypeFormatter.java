@@ -24,6 +24,8 @@ public class PetTypeFormatter implements Formatter<PetType> {
        return petType.getName();
     }
 
+    //pulls all PetTypes and then matches based on name
+    //fixes issue where Pet Type was incorrectly attempting to be generated from Long id value
     @Override
     public PetType parse(String text, Locale locale) throws ParseException {
         Collection<PetType> findPetTypes = petTypeService.findAll();
