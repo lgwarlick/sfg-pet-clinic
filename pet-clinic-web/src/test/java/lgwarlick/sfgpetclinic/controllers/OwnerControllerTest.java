@@ -33,16 +33,16 @@ class OwnerControllerTest {
     @InjectMocks
     OwnerController controller;
 
-    MockMvc mockMvc;
 
     Set<Owner> owners;
 
+    MockMvc mockMvc;
 
     @BeforeEach
     void setUp() {
         owners = new HashSet<>();
-        owners.add(Owner.builder().id(1l).build());
-        owners.add(Owner.builder().id(2l).build());
+        owners.add(Owner.builder().id(1L).build());
+        owners.add(Owner.builder().id(2L).build());
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
@@ -78,6 +78,18 @@ class OwnerControllerTest {
                 .andExpect(view().name("redirect:/owners/1"));
     }
 
+    @Test
+    void processFindFormEmptyReturnMany() throws Exception {
+        when(ownerService.findAllByLastNameLike(anyString()))
+                .thenReturn(Arrays.asList(Owner.builder().id(1L).build(),
+                        Owner.builder().id(2L).build()));
+
+        mockMvc.perform(get("/owners")
+                .param("lastName",""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));;
+    }
 
     @Test
     void displayOwner() throws Exception {
